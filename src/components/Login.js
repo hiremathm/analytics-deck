@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme)=>({
 	},
 	errorText: {
 		color: 'red',
-		fontSize: "10px"
+		fontSize: "12px"
 	},
 	buttonSuccess: {
     	backgroundColor: green[500],
@@ -63,6 +63,7 @@ const Login = (props) => {
 	let [buttonText, setButtonText] = useState('Login')
 	let [buttonColor, setButtonColor] = useState('primary')
 	let [loginIcon,setLoginIcon] = useState(false)
+	let [errorMsg, setErrorMsg] = useState()
 	return(
 		<div className={classes.root}>
 		<Formik
@@ -97,7 +98,12 @@ const Login = (props) => {
 				        })
 				        .then(user => {
 				            if(user.data.errors){
+			         			setErrorMsg(user.data.errors)
 				                console.log("Login Errors", user)
+				                setTimeout(()=> {
+				                	setErrorMsg()
+				                	setLoading(false)
+				                },3000)
 				            }else{
 			            		setLoading(false)
 			            		setLoginIcon(true)
@@ -111,7 +117,7 @@ const Login = (props) => {
 				   			}
 				        })
 				        .catch(error => {
-				            console.log("logged in error is ", error)
+				            console.log("logged in error is ", error)				            
 				        })
 		           		setSubmitting(false);
 		         	}, 2000);
@@ -138,12 +144,13 @@ const Login = (props) => {
     			>
       			{loginIcon ?  <CheckIcon/> : <SaveIcon /> }
     		  </Fab>
-
 		      <Typography component="h1" variant="h5">
           		Sign in
         	  </Typography>
-        	  {(!errors.password && !errors.email && state) && <CircularProgress size={43}/>}
-
+        	  <br/>
+        	  {(!errors.password && !errors.email && state) && <CircularProgress className={errorMsg && classes.errorText} size={43}/>}
+ 			  
+        	  <b className={classes.errorText}>{errorMsg && errorMsg}</b>
 		      <form className={classes.form} noValidate onSubmit={handleSubmit}>
 		      	<TextField 
 		      		variant = "outlined"
@@ -157,7 +164,7 @@ const Login = (props) => {
 		      		autoFocus
 		      		onChange={handleChange}
              		onBlur={handleBlur}
-             		value={values.email}
+             		value={values.email}		      		
 		      	/>
 		      	<Typography className={classes.errorText}>{errors.email && touched.email && errors.email}</Typography>
 
