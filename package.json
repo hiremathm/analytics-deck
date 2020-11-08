@@ -36,7 +36,7 @@
     "yup": "^0.29.3"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "node start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
